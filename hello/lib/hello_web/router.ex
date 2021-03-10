@@ -16,17 +16,34 @@ defmodule HelloWeb.Router do
 
   scope "/", HelloWeb do
     pipe_through :browser
-    resources "/users", UserController
-    resources "/posts", PostController, :only [:index, :show]
-    # get "/", PageController, :index
-    # get "/hello", HelloController, :index
-    # get "/hello/:messenger", HelloController, :show
+
+    resources "/users", UserController do
+      resources "/posts", PostController
+    end
+
+    resources "/posts", PostController, only: [:index, :show]
+    resources "/comments", CommentController, except: [:delete]
+    get "/", PageController, :index
+    get "/hello", HelloController, :index
+    get "/hello/:messenger", HelloController, :show
+  end
+
+  scope "/admin", HelloWeb.Admin, as: :admin do
+    pipe_through :browser
+
+    resources "/reviews", ReviewController
   end
 
   # Other scopes may use custom stacks.
-  # scope "/api", HelloWeb do
-  #   pipe_through :api
-  # end
+  scope "/api", HelloWeb.Api, as: :api do
+    pipe_through :api
+
+    scope "/v1", V1, as: :v1 do
+      resources "/images", ImageController
+      resources "/reviews", ReviewController
+      resources "/users", UserController
+    end
+  end
 
   # Enables LiveDashboard only for development
   #
