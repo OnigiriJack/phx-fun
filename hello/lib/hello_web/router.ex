@@ -24,6 +24,7 @@ defmodule HelloWeb.Router do
     resources "/posts", PostController, only: [:index, :show]
     resources "/comments", CommentController, except: [:delete]
     get "/", PageController, :index
+    resources "/users", UserController
     get "/redirect_test", PageController, :redirect_test
     get "/hello", HelloController, :index
     get "/hello/:messenger", HelloController, :show
